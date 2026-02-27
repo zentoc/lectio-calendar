@@ -9,6 +9,7 @@ import me.abdiskiosk.lectiocalendar.db.dao.LectioCalendarEventDAO;
 import me.abdiskiosk.lectiocalendar.lectio.LectioClient;
 import me.abdiskiosk.lectiocalendar.lectio.storage.LectioAuthStorage;
 import me.abdiskiosk.lectiocalendar.server.JavalinServer;
+import me.abdiskiosk.lectiocalendar.task.ScheduledTaskUpdateAssignments;
 import me.abdiskiosk.lectiocalendar.task.ScheduledTaskUpdateCalendar;
 import me.abdiskiosk.lectiocalendar.task.TaskSchedulingManager;
 
@@ -33,8 +34,8 @@ public class Main {
         db.init();
         LectioCalendarEventDAO calendarEventDAO = new LectioCalendarEventDAO(db);
         TaskSchedulingManager schedulingManager = new TaskSchedulingManager();
-        schedulingManager.executeAndSchedule(60, new ScheduledTaskUpdateCalendar(calendarEventDAO, client));
-
+        //schedulingManager.executeAndSchedule(60, new ScheduledTaskUpdateCalendar(calendarEventDAO, client));
+        schedulingManager.executeAndSchedule(60, new ScheduledTaskUpdateAssignments(client));
         new JavalinServer(8080, API_KEY, client, calendarEventDAO);
     }
 

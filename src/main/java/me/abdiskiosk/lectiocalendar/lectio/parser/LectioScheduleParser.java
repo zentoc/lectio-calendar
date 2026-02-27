@@ -1,4 +1,4 @@
-package me.abdiskiosk.lectiocalendar.lectio;
+package me.abdiskiosk.lectiocalendar.lectio.parser;
 
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;

@@ -1,11 +1,13 @@
 package me.abdiskiosk.lectiocalendar.lectio;
 
 import dk.zentoc.LectioSession;
+import me.abdiskiosk.lectiocalendar.db.object.LectioAssignment;
 import me.abdiskiosk.lectiocalendar.db.object.LectioCalendarEvent;
+import me.abdiskiosk.lectiocalendar.lectio.parser.LectioAssignmentParser;
+import me.abdiskiosk.lectiocalendar.lectio.parser.LectioScheduleParser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class LectioWindow {
 
@@ -18,8 +20,8 @@ public class LectioWindow {
     }
 
     public @NotNull Collection<LectioCalendarEvent> getEvents(int year, int weekNum) throws Exception {
-        System.out.println("LINK: " + generateUrl(year, weekNum));
-        session.page().navigate(generateUrl(year, weekNum));
+        System.out.println("LINK: " + generateScheduleUrl(year, weekNum));
+        session.page().navigate(generateScheduleUrl(year, weekNum));
 
         session.page().waitForLoadState();
         System.out.println("loaded");
@@ -32,8 +34,20 @@ public class LectioWindow {
         }
     }
 
+    public @NotNull Collection<LectioAssignment> getAssignments() throws Exception {
+        session.page().navigate(generateAssignmentUrl());
+        session.page().waitForLoadState();
+        try {
+            return new LectioAssignmentParser().parseAssignments(session.page());
+        } catch (Exception e) {
+            System.err.println("Error parsing assignments: " + e.getMessage());
+            throw new Exception(e);
+        }
+    }
+
+
     @SuppressWarnings("deprecation")
-    protected String generateUrl(int year, int weekNum) {
+    protected String generateScheduleUrl(int year, int weekNum) {
         String weekString = String.valueOf(weekNum);
         if(weekString.length() == 1) {
             weekString = "0" + weekString;
@@ -41,6 +55,11 @@ public class LectioWindow {
         weekString += year;
         return String.format("https://www.lectio.dk/lectio/%s/SkemaNy.aspx?showtype=0&week=%s", schoolId, weekString);
     }
+
+    protected String generateAssignmentUrl() {
+        return String.format("https://www.lectio.dk/lectio/%s/OpgaverElev.aspx", schoolId);
+    }
+
 
     public void close() {
         session.close();
