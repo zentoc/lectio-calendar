@@ -7,8 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 
 @Data
-public class LectioCalendarEvent {
-
+public class LectioCalendarEvent implements LectioEvent {
     private final int id;
     private final @Nullable String title;
     private final @Nullable String team;

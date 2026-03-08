@@ -1,7 +1,7 @@
 package me.abdiskiosk.lectiocalendar.task;
 
 import lombok.NonNull;
-import me.abdiskiosk.lectiocalendar.db.object.LectioAssignment;
+import me.abdiskiosk.lectiocalendar.db.object.LectioAssignmentEvent;
 import me.abdiskiosk.lectiocalendar.lectio.LectioClient;
 import me.abdiskiosk.lectiocalendar.lectio.LectioWindow;
 
@@ -18,11 +18,17 @@ public class ScheduledTaskUpdateAssignments implements Runnable {
 
     @Override
     public void run() {
+
         LectioWindow window = lectioClient.openWindow();
         try {
-            Collection<LectioAssignment> assignments = window.getAssignments();
+            Collection<LectioAssignmentEvent> assignments = window.getAssignments();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } finally {
+            try {
+                window.close();
+            } catch (Exception ignored) {
+            }
         }
     }
 }

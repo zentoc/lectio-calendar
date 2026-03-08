@@ -1,7 +1,7 @@
 package me.abdiskiosk.lectiocalendar.lectio;
 
 import dk.zentoc.LectioSession;
-import me.abdiskiosk.lectiocalendar.db.object.LectioAssignment;
+import me.abdiskiosk.lectiocalendar.db.object.LectioAssignmentEvent;
 import me.abdiskiosk.lectiocalendar.db.object.LectioCalendarEvent;
 import me.abdiskiosk.lectiocalendar.lectio.parser.LectioAssignmentParser;
 import me.abdiskiosk.lectiocalendar.lectio.parser.LectioScheduleParser;
@@ -34,7 +34,7 @@ public class LectioWindow {
         }
     }
 
-    public @NotNull Collection<LectioAssignment> getAssignments() throws Exception {
+    public @NotNull Collection<LectioAssignmentEvent> getAssignments() throws Exception {
         session.page().navigate(generateAssignmentUrl());
         session.page().waitForLoadState();
         try {

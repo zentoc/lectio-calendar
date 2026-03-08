@@ -3,7 +3,7 @@ package me.abdiskiosk.lectiocalendar.lectio.parser;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PlaywrightException;
-import me.abdiskiosk.lectiocalendar.db.object.LectioAssignment;
+import me.abdiskiosk.lectiocalendar.db.object.LectioAssignmentEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
@@ -25,7 +25,7 @@ public class LectioAssignmentParser {
      * We explicitly disable "Vis kun aktuelle" so we get the full history (otherwise
      * Lectio often limits the table to only current/relevant assignments).
      */
-    public @NotNull Collection<LectioAssignment> parseAssignments(@NotNull Page page) {
+    public @NotNull Collection<LectioAssignmentEvent> parseAssignments(@NotNull Page page) {
         ensureOnlyCurrentUnchecked(page);
 
         // Wait for the table to be present.
@@ -42,7 +42,7 @@ public class LectioAssignmentParser {
 
         // Re-query rows after any filtering. Don't keep references from before DOM refresh.
         List<ElementHandle> rows = table.querySelectorAll("tbody > tr");
-        List<LectioAssignment> assignments = new ArrayList<>();
+        List<LectioAssignmentEvent> assignments = new ArrayList<>();
 
         for (ElementHandle row : rows) {
             if (!row.querySelectorAll("th").isEmpty()) continue;
@@ -59,7 +59,7 @@ public class LectioAssignmentParser {
             // If the row is somehow empty, skip
             if ((title == null || title.isBlank()) && (team == null || team.isBlank())) continue;
 
-            assignments.add(new LectioAssignment(title, note, team, studentHours, deadline));
+            assignments.add(new LectioAssignmentEvent(title, note, team, studentHours, deadline));
         }
 
         return assignments;
